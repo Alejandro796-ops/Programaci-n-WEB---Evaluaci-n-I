@@ -1,4 +1,4 @@
-// Arreglo que simula una base de datos.
+// Arreglo en memoria a modo de base de datos
 let incidencias = [
     {
         id: 1,
@@ -8,7 +8,6 @@ let incidencias = [
         estado: "Pendiente",
         fecha: new Date().toISOString()
     },
-    
     {
         id: 2,
         titulo: "Impresora no responde",
@@ -19,13 +18,14 @@ let incidencias = [
     }
 ];
 
-// Función para OBTENER todas las incidencias.
+// Función para obtener todas las incidencias
 const getIncidencias = () => incidencias;
 
-// Función para GUARDAR/ACTUALIZAR todo el arreglo.
-const setIncidencias = (nuevoArray) => {
-    incidencias = nuevoArray;
+// Función para agregar una nueva incidencia
+const addIncidencia = (incidencia) => {
+    incidencias.push(incidencia);
+    return incidencia;
 };
 
-// Exportacion de funciones, algo asi como heredar un metodo en POO.
-module.exports = { getIncidencias, setIncidencias };
+// Exportacion de las funciones
+module.exports = { getIncidencias, addIncidencia };
