@@ -1,4 +1,4 @@
-const { getIncidencias, addIncidencia } = require('../data/db');
+const { getIncidencias, addIncidencia, setIncidencias } = require('../data/db');
 
 // 1. Listar todas las incidencias
 const listarIncidencias = (req, res) => {
@@ -121,6 +121,8 @@ const eliminarIncidencia = (req, res) => {
     // Uso de .filter() para crear un nuevo arreglo sin la incidencia eliminada
     const nuevoArreglo = incidencias.filter(inc => inc.id !== id);
     
+    setIncidencias(nuevoArreglo);
+
     res.status(200).json({ 
         mensaje: "Incidencia eliminada con éxito",
         incidenciasRestantes: nuevoArreglo.length 

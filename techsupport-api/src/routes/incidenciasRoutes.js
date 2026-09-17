@@ -2,10 +2,19 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/incidenciasController');
 
-// GET /api/incidencias - Lista todas las incidencias
+// GET - Lista todas las incidencias
 router.get('/', controller.listarIncidencias);
 
-// POST /api/incidencias - Registra una nueva incidencia
+// POST - Registra una nueva incidencia
 router.post('/', controller.registrarIncidencia);
+
+// GET - Buscar por ID
+router.get('/:id', controller.buscarPorId);
+
+// PUT - Cambiar estado
+router.put('/:id/estado', controller.cambiarEstado);
+
+// DELETE - Eliminar
+router.delete('/:id', controller.eliminarIncidencia);
 
 module.exports = router;
