@@ -129,11 +129,113 @@ const eliminarIncidencia = (req, res) => {
     });
 };
 
+// 6. Estadisticas
+const obtenerEstadisticas = (req, res) => {
+    const incidencias = getIncidencias();
+
+    const porEstado = incidencias.reduce((acc, incidencia) => {
+        acc[incidencia.estado] = (acc[incidencia.estado] || 0) + 1;
+        return acc;
+    }, {});
+
+    const porPrioridad = incidencias.reduce((acc, incidencia) => {
+        acc[incidencia.prioridad] = (acc[incidencia.prioridad] || 0) + 1;
+        return acc;
+    }, {});
+
+    const resueltas = incidencias.filter(inc => inc.estado === "Resuelto").length;
+
+    const pendientes = incidencias.filter(inc => inc.estado === "Pendiente").length;
+
+    const total = incidencias.length;
+    const porcentajeResolucion = total > 0 ? (resueltas / total) * 100 : 0;
+
+    res.status(200).json({
+        totalIncidencias: total,
+        porEstado,
+        porPrioridad,
+        resueltas,
+        pendientes,
+        porcentajeResolucion: `${porcentajeResolucion.toFixed(2)}%`
+    });
+};
+
+// 8. Clasificación
+const clasificacionAutomatica = (req, res) => {
+    const id = parseInt(req.params.id);
+    const incidencias = getIncidencias();
+    
+    const incidencia = incidencias.find(inc => inc.id === id);
+    
+    if (!incidencia) {
+        return res.status(404).json({ error: "Incidencia no encontrada" });
+    }
+
+    let clasificacion = {};
+    
+    switch (incidencia.prioridad) {
+        case "Alta":
+            clasificacion = {
+                id: incidencia.id,
+                titulo: incidencia.titulo,
+                prioridad: incidencia.prioridad,
+                nivelUrgencia: 1,
+                categoria: "Crítico",
+                tiempoRespuestaHoras: 2,
+                descripcionNivel: "Requiere atención inmediata",
+                equipoAsignado: "Soporte Nivel 3"
+            };
+            break;
+            
+        case "Media":
+            clasificacion = {
+                id: incidencia.id,
+                titulo: incidencia.titulo,
+                prioridad: incidencia.prioridad,
+                nivelUrgencia: 2,
+                categoria: "Importante",
+                tiempoRespuestaHoras: 8,
+                descripcionNivel: "Debe ser atendido en el día",
+                equipoAsignado: "Soporte Nivel 2"
+            };
+            break;
+            
+        case "Baja":
+            clasificacion = {
+                id: incidencia.id,
+                titulo: incidencia.titulo,
+                prioridad: incidencia.prioridad,
+                nivelUrgencia: 3,
+                categoria: "Normal",
+                tiempoRespuestaHoras: 24,
+                descripcionNivel: "Puede esperar hasta 24 horas",
+                equipoAsignado: "Soporte Nivel 1"
+            };
+            break;
+            
+        default:
+            clasificacion = {
+                id: incidencia.id,
+                titulo: incidencia.titulo,
+                prioridad: incidencia.prioridad,
+                nivelUrgencia: 4,
+                categoria: "Sin clasificar",
+                tiempoRespuestaHoras: 48,
+                descripcionNivel: "Prioridad no reconocida",
+                equipoAsignado: "Pendiente de asignación"
+            };
+    }
+
+    res.status(200).json(clasificacion);
+};
+
 // Exportacion de funciones
 module.exports = { 
     listarIncidencias, 
     registrarIncidencia,
     buscarPorId,
     cambiarEstado,
-    eliminarIncidencia
+    eliminarIncidencia,
+    obtenerEstadisticas,
+    clasificacionAutomatica
 };
