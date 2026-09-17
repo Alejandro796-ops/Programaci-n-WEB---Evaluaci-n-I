@@ -8,6 +8,12 @@ router.get('/', controller.listarIncidencias);
 // POST - Registra una nueva incidencia
 router.post('/', controller.registrarIncidencia);
 
+// GET - Obtener estadísticas
+router.get('/estadisticas', controller.obtenerEstadisticas);
+
+// GET - Clasificación automática
+router.get('/:id/clasificacion', controller.clasificacionAutomatica);
+
 // GET - Buscar por ID
 router.get('/:id', controller.buscarPorId);
 
