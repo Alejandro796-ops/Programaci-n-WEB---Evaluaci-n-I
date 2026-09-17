@@ -27,5 +27,10 @@ const addIncidencia = (incidencia) => {
     return incidencia;
 };
 
+//Funcion para filtrar/eliminar
+const setIncidencias = (nuevoArreglo) => {
+    incidencias = nuevoArreglo;
+};
+
 // Exportacion de las funciones
-module.exports = { getIncidencias, addIncidencia };
+module.exports = { getIncidencias, addIncidencia, setIncidencias };
