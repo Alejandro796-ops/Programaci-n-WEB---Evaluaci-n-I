@@ -160,7 +160,7 @@ const obtenerEstadisticas = (req, res) => {
     });
 };
 
-// 8. Clasificación
+// 7. Clasificación
 const clasificacionAutomatica = (req, res) => {
     const id = parseInt(req.params.id);
     const incidencias = getIncidencias();
