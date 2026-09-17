@@ -52,4 +52,86 @@ const registrarIncidencia = (req, res) => {
     });
 };
 
-module.exports = { listarIncidencias, registrarIncidencia };
+// 3. Buscar Incidencia por ID
+const buscarPorId = (req, res) => {
+    const id = parseInt(req.params.id);
+    const incidencias = getIncidencias();
+
+
+    const incidencia = incidencias.find(inc => inc.id === id);
+
+    if (!incidencia) {
+        return res.status(404).json({ error: "Incidencia no encontrada" });
+    }
+
+    res.status(200).json(incidencia);
+};
+
+// 4. Cambiar Estado de Incidencia
+const cambiarEstado = (req, res) => {
+    const id = parseInt(req.params.id);
+    const { nuevoEstado } = req.body;
+    const incidencias = getIncidencias();
+
+
+    const incidencia = incidencias.find(inc => inc.id === id);
+    if (!incidencia) {
+        return res.status(404).json({ error: "Incidencia no encontrada" });
+    }
+
+    //Uso de switch
+    let estadoValido = false;
+    switch (nuevoEstado) {
+        case "Pendiente":
+        case "En proceso":
+        case "Resuelto":
+        case "Cancelado":
+            estadoValido = true;
+            break;
+        default:
+            estadoValido = false;
+    }
+
+    if (!estadoValido) {
+        return res.status(400).json({ 
+            error: "Estado no válido. Debe ser: Pendiente, En proceso, Resuelto o Cancelado" 
+        });
+    }
+
+    // Actualizacion del estado
+    incidencia.estado = nuevoEstado;
+
+    res.status(200).json({ 
+        mensaje: "Estado actualizado correctamente", 
+        incidencia 
+    });
+};
+
+// 5. Eliminar Incidencia
+const eliminarIncidencia = (req, res) => {
+    const id = parseInt(req.params.id);
+    let incidencias = getIncidencias();
+
+    // Verifica si el archivo existe o no
+    const existe = incidencias.find(inc => inc.id === id);
+    if (!existe) {
+        return res.status(404).json({ error: "Incidencia no encontrada" });
+    }
+
+    // Uso de .filter() para crear un nuevo arreglo sin la incidencia eliminada
+    const nuevoArreglo = incidencias.filter(inc => inc.id !== id);
+    
+    res.status(200).json({ 
+        mensaje: "Incidencia eliminada con éxito",
+        incidenciasRestantes: nuevoArreglo.length 
+    });
+};
+
+// Exportacion de funciones
+module.exports = { 
+    listarIncidencias, 
+    registrarIncidencia,
+    buscarPorId,
+    cambiarEstado,
+    eliminarIncidencia
+};
