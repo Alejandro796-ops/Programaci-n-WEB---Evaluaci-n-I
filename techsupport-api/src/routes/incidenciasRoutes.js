@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const controller = require('../controllers/incidenciasController');
 
-// Ruta de prueba temporal
-router.get('/', (req, res) => {
-    res.json({ mensaje: "Ruta de incidencias funcionando" });
-});
+// GET /api/incidencias - Lista todas las incidencias
+router.get('/', controller.listarIncidencias);
+
+// POST /api/incidencias - Registra una nueva incidencia
+router.post('/', controller.registrarIncidencia);
 
 module.exports = router;
